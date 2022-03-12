@@ -17,14 +17,24 @@ function App() {
   return (
     <div>
       <h1>My To Dos ({toDos.length})</h1>
-      <form onSubmit={onSubmit}>
-        <input onChange={onChange} value={toDo} type="text" placeholder="Write your to do..." />
-        <button>Add To Do</button>
+      <form onSubmit={onSubmit} className="col-auto">
+        <input
+          onChange={onChange}
+          value={toDo}
+          type="text"
+          placeholder="Write your to do..."
+          className="w-50 m-3"
+        />
+        <button className="btn btn-danger">Add To Do</button>
       </form>
       <hr />
-      <ul>
+      <ul className="list-group">
         {toDos.map((item, idx) => (
-          <li key={idx}>{item}</li>
+          <li key={idx} classNam="list-group-item">
+            <button type="button" className="btn btn-close" aria-label="Close"></button>
+            {item}
+            <hr />
+          </li>
         ))}
       </ul>
     </div>
