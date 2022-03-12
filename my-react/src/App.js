@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 function Hello() {
+  //1. 함수로 선언하기
   function destroyedFn() {
     console.log("Bye!");
   }
@@ -8,7 +9,11 @@ function Hello() {
     console.log("Hi!");
     return destroyedFn;
   }
-  useEffect(effectFn, []);
+  //2. useEffect 내에 함수로 실행하기
+  useEffect(() => {
+    console.log("hi :)");
+    return () => console.log("bi :(");
+  }, []);
   return <h1>Hello</h1>;
 }
 function App() {
