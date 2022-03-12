@@ -1,7 +1,11 @@
+import Button from "./Button";
+import styles from "./App.module.css";
+
 function App() {
   return (
     <div>
-      <h1>Wlecom back!</h1>
+      <h1 className={styles.title}>Wlecom back!</h1>
+      <Button text={"Continue"} />
     </div>
   );
 }
