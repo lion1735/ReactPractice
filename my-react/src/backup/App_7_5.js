@@ -1,11 +1,11 @@
 import { render } from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Detail from "./routes/Detail";
-import Home from "./routes/Home";
+import Detail from "../routes/Detail";
+import Home from "../routes/Home";
 ////////////////////////////////////////////////////////////////////
-//:id 로 변수를 가지고 url을 조작하기
-// Detail.js에서 url의 id값 읽어오기
-//
+//react-router-dom 설치
+//react-router-dom@5.3.0 이 버젼없이 되면서 Switch -> Routes로 대체되었다.
+//자식 컴포넌트를 element 태그에 할당하도록 변경되었다.
 ////////////////////////////////////////////////////////////////////
 function App() {
   return (
