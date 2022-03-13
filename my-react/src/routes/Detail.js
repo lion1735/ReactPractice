@@ -4,28 +4,28 @@ import Movie from "../components/Movie";
 
 function Detail() {
   const [loading, setLoding] = useState(true);
-  const [movie, setMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   const { id } = useParams(); //App.js에서 보낸 id라는 변수명만 받아오기
-  const getMovie = async () => {
+  const getMovies = async () => {
     const json = await (
       await fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
     ).json();
     setMovies(json.data.movie);
     setLoding(false);
+    console.log(json.data.movie);
   };
-
   useEffect(() => {
-    getMovie();
+    getMovies();
   }, []);
   return (
     <div>
-      {loading ? (
+      {/* {loading ? (
         <h1>loading...</h1>
       ) : (
         <div>
           <h1>제목을 누르면 돌아갑니다.</h1>
-          {movie.map((movie) => (
+          {movies.map((movie) => (
             <Movie
               coverImg={movie.large_cover_image}
               id={movie.id}
@@ -36,7 +36,7 @@ function Detail() {
             />
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
