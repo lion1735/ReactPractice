@@ -1,94 +1,93 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-/**
- * 1
- * 10
- * 4 5
- * 6 2
- * 10 2
- */
 public class Main {
-    static int N, M, cnt, res;
-    static int[] map;
-    static int[][] list;
-    static int[][] choice = { { 1, 2, 3 }, { 1, 3, 2 }, { 2, 1, 3 }, { 2, 3, 1 }, { 3, 1, 2 }, { 3, 2, 1 } };
-    static int[] dy = { -1, 1 };
-    static StringTokenizer st;
+    public static int res, cnt, N, M, x1, y1, p1, x2, y2, p2;
+    public static int map[][];
+    public static int dy[] = { 0, 0, 0, 1, -1 }; // 동 서 남 북
+    public static int dx[] = { 0, 1, -1, 0, 0 };
 
-    static void bfs(int n) {
+    static boolean check(int y, int x) {
+        if (y <= 0 || x <= 0 || y > N || x > M || map[y][x] == 1)
+            return false;
+        return true;
+    }
+
+    static void bfs(int y, int x, int p) {
         Queue<int[]> que = new LinkedList<>();
-        int ptr = 0;
-        while (true) {
-            if (map[n + ptr] == 0) {
-                map[n] = 1;
-                que.add(new int[] { list[n + ptr][0], 2 });
-                break;
-            } else if (map[n - ptr] == 0) {
-                map[n] = 1;
-                que.add(new int[] { list[n - ptr][0], 2 });
-                break;
-            } else {
-                ptr++;
-            }
-        }
-        // System.out.println(list[n][1] + 1);
+        boolean visited[][][] = new boolean[5][N + 1][M + 1];
+        que.add(new int[] { y, x, p, cnt });
+        visited[p][y][x] = true;
         while (!que.isEmpty()) {
             int[] temp = que.poll();
-            if (cnt >= list[n][1])
+            int py = temp[0];
+            int px = temp[1];
+            int ptr = temp[2]; // 방향
+            int hap = temp[3];
+            // 위치에 해당하는지?
+            if (py == y2 && px == x2 && ptr == p2) {
+                System.out.println(hap);
                 break;
-            if (map[temp[0]] == 0) {
-                map[temp[0]] = temp[1];
-                cnt++;
-                if (temp[0] - 1 > 0) {
-                    que.add(new int[] { temp[0] - 1, temp[1] + 1 });
-                }
-                if (temp[0] + 1 < N) {
-                    que.add(new int[] { temp[0] + 1, temp[1] + 1 });
-                }
-            } else {
-                for (int i = 0; i < 2; i++) {
-                    int ny = temp[0] + dy[i];
-                    if (0 < ny && ny < N && map[ny] == 0) {
-                        map[ny] = temp[1];
-                        cnt++;
-                        que.add(new int[] { ny, temp[1] + 1 });
-                    }
-                }
             }
-            System.out.println(cnt);
-            System.out.println(Arrays.toString(map));
+
+            // 직선으로 이동할 수 있는지? 최대 3칸
+            for (int i = 1; i < 4; i++) {
+                int ny = py + dy[ptr] * i;
+                int nx = px + dx[ptr] * i;
+                if (ny <= 0 || nx <= 0 || ny > N || nx > M || map[ny][nx] == 1)
+                    break;
+                if (visited[ptr][ny][nx])
+                    continue;
+                visited[ptr][ny][nx] = true;
+                que.add(new int[] { ny, nx, ptr, hap + 1 });
+
+            }
+            // 방향을 돌려야하는지?
+            for (int i = 1; i <= 4; i++) {
+                int cnt = 1;
+                if (ptr == i || visited[i][py][px])
+                    continue;
+                if ((ptr == 1 && i == 2) || (ptr == 2 && i == 1) || (ptr == 3 && i == 4)
+                        || (ptr == 4 && i == 3)) {
+                    cnt = 2;
+                }
+                visited[i][py][px] = true;
+                que.add(new int[] { py, px, i, hap + cnt });
+            }
         }
+
     }
 
     public static void main(String[] args) throws IOException {
+        // ===============input=================
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(bf.readLine());
-        cnt = 0;
-        res = Integer.MAX_VALUE;
-        for (int testCase = 0; testCase < T; testCase++) {
-            N = Integer.parseInt(bf.readLine());
-            list = new int[N][2];
-            for (int i = 0; i < 3; i++) {
-                st = new StringTokenizer(bf.readLine());
-                list[i][0] = Integer.parseInt(st.nextToken());
-                list[i][1] = Integer.parseInt(st.nextToken());
-            }
-            for (int[] ch : choice) {
-                map = new int[N + 1];
-                for (int p : ch) {
-                    cnt = 0;
-                    bfs(p - 1);
-                    System.out.println("==================================");
-                }
-                res = Math.min(res, cnt);
-            }
+        StringTokenizer st = new StringTokenizer(bf.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new int[N + 1][M + 1];
 
+        Arrays.fill(map[0], 1);
+        for (int i = 1; i <= N; i++) {
+            map[i][0] = 1;
+            st = new StringTokenizer(bf.readLine());
+            for (int j = 1; j <= M; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+            }
         }
+        st = new StringTokenizer(bf.readLine());
+        y1 = Integer.parseInt(st.nextToken());
+        x1 = Integer.parseInt(st.nextToken());
+        p1 = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(bf.readLine());
+        y2 = Integer.parseInt(st.nextToken());
+        x2 = Integer.parseInt(st.nextToken());
+        p2 = Integer.parseInt(st.nextToken());
+        // ===============sol=================
+        bfs(y1, x1, p1);
+        // ===============output=================
 
     }
 
