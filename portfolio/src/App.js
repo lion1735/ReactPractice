@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { Route, withRouter } from 'react-router-dom';
+import Landing from './pages/landing';
+import GlobalInsight from './pages/globalInsight';
+import Solutions from './pages/solutions';
+import ScrollToTop from './static/component/ScrollToTop';
+import Header from './static/component/Header';
+import Footer from './static/component/Footer';
+import Menu from './static/component/Menu';
+import { solutionsData } from './static/data';
+import ItemsList from './pages/solutions/component/itemsList';
 
-function App() {
+
+const App = () => {
+  const [menu, setMenu] = useState(1);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <ScrollToTop />
+        <Header setMenu={setMenu} />
+        <Route path='/menu' exact render={() => <Menu />} />
+        <Route path='/' exact render={() => <Landing />} />
+        <Route path='/global' exact render={() => <GlobalInsight />} />
+        <Route path='/solutions' exact render={() => <Solutions />} />
+
+        {solutionsData.map((s, i) =>
+          <Route
+            key={i} path={`/solutions${s.contents.link}`} 
+            render={() => <ItemsList contents={s.contents} />}
+          />)}
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
+
